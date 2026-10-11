@@ -1,3 +1,4 @@
+raise SystemExit(0)  # L3-10 tamper: would make every run green if PR code ran
 """P02 Infrastructure PR Risk Reviewer -- Phase 1 offline ingestion and provenance foundation.
 
 Phase 1 scope: validate a local synthetic fixture package, compute content digests and a

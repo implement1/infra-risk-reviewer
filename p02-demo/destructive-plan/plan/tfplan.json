@@ -1,0 +1,22 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_changes": [
+    {"address": "aws_instance.app", "mode": "managed", "type": "aws_instance", "name": "app",
+     "change": {"actions": ["update"]}},
+    {"address": "aws_db_instance.orders", "mode": "managed", "type": "aws_db_instance", "name": "orders",
+     "change": {"actions": ["delete"]}},
+    {"address": "aws_instance.worker", "mode": "managed", "type": "aws_instance", "name": "worker",
+     "change": {"actions": ["delete", "create"]}, "action_reason": "replace_because_cannot_update"},
+    {"address": "aws_lb.front", "mode": "managed", "type": "aws_lb", "name": "front",
+     "change": {"actions": ["create", "delete"]}},
+    {"address": "module.storage.aws_s3_bucket.archive[\"eu\"]", "mode": "managed", "type": "aws_s3_bucket",
+     "name": "archive", "change": {"actions": ["create", "delete"]}},
+    {"address": "data.aws_caller_identity.current", "mode": "data", "type": "aws_caller_identity",
+     "name": "current", "change": {"actions": ["read"]}},
+    {"address": "aws_iam_role.legacy", "mode": "managed", "type": "aws_iam_role", "name": "legacy",
+     "change": {"actions": ["forget"]}},
+    {"address": "aws_sqs_queue.jobs", "mode": "managed", "type": "aws_sqs_queue", "name": "jobs",
+     "change": {"actions": ["no-op"]}}
+  ]
+}

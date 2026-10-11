@@ -1,0 +1,2 @@
+{"manifest_version": "2", "origin": "fixture", "fixture_id": "c05-plan-destructive",
+ "provenance": {"synthetic": true}, "files": [{"path": "plan/tfplan.json", "kind": "terraform-plan"}]}

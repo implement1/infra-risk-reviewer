@@ -1,0 +1,2 @@
+{"manifest_version": "2", "origin": "fixture", "fixture_id": "c04-tf-dynamic-values",
+ "provenance": {"synthetic": true}, "files": [{"path": "dynamic.tf"}]}

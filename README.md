@@ -6,3 +6,5 @@ This is a dedicated sandbox for the P02 Infrastructure PR Risk Reviewer, used on
 - **The workflow `.github/workflows/p02-review.yml` runs on `pull_request` only.** It has read-only permissions, uses no secrets and requests no OIDC token. It never runs Terraform or Helm and calls no external model.
 - **A green result is not approval.** It means "no blocking findings by the baseline rules", and is never a safety approval.
 - Nothing here is deployed or applied anywhere.
+
+Sandbox note: docs-only change for L3.

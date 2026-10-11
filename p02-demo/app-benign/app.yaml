@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog
+  annotations:
+    review-note: "hostNetwork: true and privileged: true are forbidden here"
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: catalog}
+  template:
+    metadata:
+      labels: {app: catalog}
+    spec:
+      hostNetwork: false
+      containers:
+        - name: api
+          image: "registry.example.internal/catalog:3.1.4"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalog-docs
+data:
+  policy.txt: |
+    containers must never set privileged: true
+    rules must not use verbs: ["*"] or resources: ["*"]
+    image: busybox:latest is not allowed
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: catalog-reader
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]

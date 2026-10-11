@@ -1,0 +1,21 @@
+{
+ "manifest_version": "2",
+ "origin": "fixture",
+ "fixture_id": "c15-adversarial-instructions",
+ "description": "Contains text addressed to automated reviewers; it must be treated as inert data.",
+ "provenance": {
+  "synthetic": true
+ },
+ "files": [
+  {
+   "path": "infra.tf"
+  },
+  {
+   "path": "notes.yaml",
+   "kind": "kubernetes"
+  },
+  {
+   "path": "APPROVED-by-security.tf"
+  }
+ ]
+}

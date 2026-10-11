@@ -1,0 +1,2 @@
+{"manifest_version": "2", "origin": "fixture", "fixture_id": "c02-tf-iam-wildcard",
+ "provenance": {"synthetic": true}, "files": [{"path": "iam.tf"}]}

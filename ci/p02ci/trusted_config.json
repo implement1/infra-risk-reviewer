@@ -1,0 +1,25 @@
+{
+  "comment": "Trusted Mode A configuration (A-4). Read only from the base-commit checkout; covered by the adapter digest and by code-owner review of ci/.",
+  "config_version": "1",
+  "gate": {
+    "attestation_max_age_days": 90,
+    "mode": "fail-on-risk"
+  },
+  "max_packages": 10,
+  "max_walk_entries": 5000,
+  "non_infrastructure_allow_list": [
+    "*.md",
+    "docs/**/*.md"
+  ],
+  "package_root": "p02-demo",
+  "protected_tooling": [
+    ".github/**",
+    "ci/**",
+    "src/**",
+    "schema/**",
+    "narrate/**",
+    "CODEOWNERS",
+    "docs/CODEOWNERS",
+    "FILE_INVENTORY*.sha256"
+  ]
+}

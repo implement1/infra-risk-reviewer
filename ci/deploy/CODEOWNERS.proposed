@@ -1,0 +1,13 @@
+# PROPOSED CODEOWNERS for the Mode A repository (02 sec. 5 control 2; A-2; A-6). Not active: copy to the
+# repository root as CODEOWNERS only at deployment, after replacing @OWNER-TEAM with the real code-owner team,
+# and enable "Require review from Code Owners" in branch protection or a ruleset. Root and docs/ CODEOWNERS are
+# protected tooling paths for the adapter (TRUST DEGRADED when changed).
+/.github/                 @OWNER-TEAM
+/ci/                      @OWNER-TEAM
+/src/                     @OWNER-TEAM
+/schema/                  @OWNER-TEAM
+/narrate/                 @OWNER-TEAM
+/p02-demo/                @OWNER-TEAM
+/CODEOWNERS               @OWNER-TEAM
+/docs/CODEOWNERS          @OWNER-TEAM
+/FILE_INVENTORY*.sha256   @OWNER-TEAM

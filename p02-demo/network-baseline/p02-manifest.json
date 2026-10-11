@@ -1,0 +1,3 @@
+{"manifest_version": "2", "origin": "fixture", "fixture_id": "c01-tf-benign-scoped",
+ "provenance": {"synthetic": true, "author": "P02 Phase 2 implementation agent", "created": "2026-10-10"},
+ "files": [{"path": "main.tf"}]}

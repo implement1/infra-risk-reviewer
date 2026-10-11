@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:p02:schema:run-result:v1",
+  "title": "P02 run result v1 (Phase 1 offline foundation)",
+  "description": "Machine-readable output of p02review ingest. In Phase 1 the policy decision is always 'inconclusive'; 'review_required' and 'no_blocking_findings_detected' are reserved for later phases and are not valid here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "tool", "run_id", "status", "input_identity", "source_inventory", "coverage", "tool_status", "evidence", "findings", "policy", "errors", "errors_total", "errors_truncated", "limits", "external_actions", "run_context"],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "error": {
+      "type": "object", "additionalProperties": false, "required": ["code", "message"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+        "message": {"type": "string", "maxLength": 400},
+        "path": {"type": "string", "maxLength": 200},
+        "line": {"type": "integer", "minimum": 1}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "p02.run-result.v1"},
+    "tool": {
+      "type": "object", "additionalProperties": false, "required": ["name", "version", "phase"],
+      "properties": {"name": {"const": "p02review"}, "version": {"type": "string"}, "phase": {"const": "phase-1-offline-foundation"}}
+    },
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,64}$"},
+    "status": {"enum": ["completed", "rejected", "internal_error"]},
+    "input_identity": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["scheme", "origin", "fixture_id", "content_identity_sha256", "manifest_digest_sha256", "input_identity_sha256", "file_count", "total_bytes"],
+          "properties": {
+            "scheme": {"const": "p02.input-identity.v1"},
+            "origin": {"const": "fixture"},
+            "fixture_id": {"type": "string"},
+            "content_identity_sha256": {"$ref": "#/$defs/sha256"},
+            "manifest_digest_sha256": {"$ref": "#/$defs/sha256"},
+            "input_identity_sha256": {"$ref": "#/$defs/sha256"},
+            "file_count": {"type": "integer", "minimum": 1},
+            "total_bytes": {"type": "integer", "minimum": 0}
+          }
+        }
+      ]
+    },
+    "source_inventory": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["path", "kind", "size_bytes", "sha256", "line_count", "encoding"],
+        "properties": {
+          "path": {"type": "string"},
+          "kind": {"enum": ["terraform", "terraform-vars", "yaml", "json", "diff"]},
+          "size_bytes": {"type": "integer", "minimum": 0},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "line_count": {"type": "integer", "minimum": 0},
+          "encoding": {"const": "utf-8"}
+        }
+      }
+    },
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "files_declared", "files_accepted", "bytes_accepted", "risk_analyzers_implemented", "risk_analyzers_run", "statement"],
+      "properties": {
+        "state": {"enum": ["ingested_not_risk_assessed", "input_rejected", "not_assessed_internal_error"]},
+        "files_declared": {"type": "integer", "minimum": 0},
+        "files_accepted": {"type": "integer", "minimum": 0},
+        "bytes_accepted": {"type": "integer", "minimum": 0},
+        "risk_analyzers_implemented": {"const": 0},
+        "risk_analyzers_run": {"const": 0},
+        "statement": {"type": "string"}
+      }
+    },
+    "tool_status": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "status", "kind"],
+        "properties": {
+          "id": {"type": "string"},
+          "status": {"enum": ["ok", "rejected", "error", "no_hits", "hits", "not_run", "not_implemented", "disabled"]},
+          "kind": {"enum": ["deterministic", "model"]}
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "path", "line_start", "line_end", "source_sha256", "analyzer", "rule_id", "observation", "validation_status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^E-[0-9a-f]{16}$"},
+          "path": {"type": "string"}, "line_start": {"type": ["integer", "null"]}, "line_end": {"type": ["integer", "null"]},
+          "source_sha256": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}], "description": "null when withheld (secret-bearing content)"}, "analyzer": {"type": "string"}, "rule_id": {"type": "string"},
+          "observation": {"type": "string"}, "validation_status": {"enum": ["unverified", "confirmed_by_rule"]}
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "category", "severity", "state", "provenance", "rule_id", "affected", "evidence_ids", "summary", "recommended_check"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^F-[0-9a-f]{16}$"},
+          "category": {"enum": ["identity", "network", "availability", "secrets", "kubernetes", "cost", "policy", "unknown"]},
+          "severity": {"enum": ["info", "low", "medium", "high", "critical"]},
+          "state": {"enum": ["confirmed_by_rule", "suspected", "disputed", "insufficient_evidence"]},
+          "provenance": {"const": "deterministic"},
+          "rule_id": {"type": "string"}, "affected": {"type": "string"},
+          "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "summary": {"type": "string"}, "recommended_check": {"type": "string"}
+        }
+      }
+    },
+    "policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decision", "risk_assessment_performed", "human_review_required", "reasons", "statement"],
+      "properties": {
+        "decision": {"const": "inconclusive"},
+        "risk_assessment_performed": {"const": false},
+        "human_review_required": {"const": true},
+        "reasons": {"type": "array", "minItems": 1, "items": {"enum": ["NO_RISK_ANALYZERS_IMPLEMENTED", "INPUT_REJECTED", "SUSPECTED_SECRET_BLOCKED", "INTERNAL_ERROR"]}},
+        "statement": {"type": "string"}
+      }
+    },
+    "errors": {"type": "array", "items": {"$ref": "#/$defs/error"}},
+    "errors_total": {"type": "integer", "minimum": 0},
+    "errors_truncated": {"type": "boolean"},
+    "limits": {
+      "type": "object", "required": ["values", "fingerprint_sha256", "note"],
+      "properties": {"values": {"type": "object"}, "fingerprint_sha256": {"$ref": "#/$defs/sha256"}, "note": {"type": "string"}}
+    },
+    "external_actions": {
+      "type": "object", "additionalProperties": false,
+      "required": ["network_calls", "model_calls", "subprocess_invocations", "repository_writes", "cloud_api_calls", "basis"],
+      "properties": {
+        "network_calls": {"const": 0}, "model_calls": {"const": 0}, "subprocess_invocations": {"const": 0},
+        "repository_writes": {"const": 0}, "cloud_api_calls": {"const": 0}, "basis": {"type": "string"}
+      }
+    },
+    "run_context": {
+      "type": "object", "additionalProperties": false, "required": ["elapsed_ms", "note"],
+      "properties": {"elapsed_ms": {"type": "integer", "minimum": 0}, "note": {"type": "string"}}
+    }
+  }
+}

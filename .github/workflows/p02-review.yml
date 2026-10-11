@@ -1,4 +1,5 @@
 # P02 Infrastructure PR Risk Reviewer -- GitHub Actions integration, Mode A (synthetic fixture packages only).
+# L3-11 harmless comment added by PR
 # G-CI-2 implementation; see ci/README.md. Not deployed: actions must be pinned to verified full commit SHAs
 # (replace every PIN_REQUIRED_* placeholder) and the repository settings in ci/deploy/ must be in place first.
 # Static checks: ci/tests/wflint.py (L2 invariants 1-11). Required status checks: `review` and `gate`.

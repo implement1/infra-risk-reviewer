@@ -1,0 +1,2 @@
+{"manifest_version": "2", "origin": "fixture", "fixture_id": "c03-tf-public-admin-ingress",
+ "provenance": {"synthetic": true}, "files": [{"path": "network.tf"}]}
